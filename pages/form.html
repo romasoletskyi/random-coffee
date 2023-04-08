@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Random Coffee</title>
+  <link rel="stylesheet" href="../styles/form.css">
+</head>
+<body>
+    <form>
+        <fieldset>
+            <legend>General</legend>
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required><br><br>
+            
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required><br><br>
+            
+            <label for="contact-info">Additional contact info - <em>Optional</em></label>
+            <input type="text" id="contact-info" name="contact-info"><br><br>
+        </fieldset>
+        
+        <fieldset>
+            <legend>Personal</legend>
+            <label for="bio">Your bio<br>
+                <small>Note: it will be shown to a matched person</small></label>
+            <textarea id="bio" name="bio" required></textarea><br><br>
+            
+            <label for="searching-for">Whom are you looking for? - <em>Optional</em><br>
+                <small>Note: it will remain a secret and just helps us to find the best pairs</small></label>
+            <input type="text" id="searching-for" name="searching-for"><br><br>
+        </fieldset>
+
+        <fieldset>
+            <legend>Constraints</legend>
+            What languages can you speak freely?
+            <label>
+                <input type="checkbox" name="lang" value="french">
+                French
+            </label>
+            <label>
+                <input type="checkbox" name="lang" value="english">
+                English
+            </label>
+        </fieldset>
+        
+        <input type="submit" value="Submit">
+      </form>
+      
+</body>
