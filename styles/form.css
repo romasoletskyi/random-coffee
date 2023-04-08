@@ -28,15 +28,17 @@ form {
     height: 150px;
   }
   
-  button[type="submit"] {
-    background-color: white;
+  #submit {
+    display: inline-block;
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    font-weight: bold;
     color: black;
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
-    border: none;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease-in-out;
+    background-color: white;
+    border-radius: 50px;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
   }
 
   fieldset {
@@ -51,4 +53,48 @@ form {
     font-size: 1.2em;
     margin-bottom: 10px;
   }
+
+  #map {
+    height: 100%;
+    width: 100%;
+  }
+
+  #map-fieldset {
+    width: 100%;
+    height: 400px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+  }
+
+table {
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+
+.day {
+  border: 1px solid gray;
+  padding: 5px;
+}
+
+.time {
+    border: 1px solid gray;
+    padding: 5px;
+    cursor: pointer;
+    background-color: white;
+    color: black;
+}
+
+.time:hover {
+    background-color: #24a0ed;
+    color: white
+}
+
+.chosen-time {
+  border: 1px solid gray;
+    padding: 5px;
+    cursor: pointer;
+    background-color: #24a0ed;
+    color: white
+}
   
