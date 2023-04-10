@@ -124,7 +124,6 @@ func main() {
 
 	http.HandleFunc("/submit", submit)
 
-	err = http.ListenAndServeTLS(":3000", "cert/certificate.crt", "cert/private.key", nil)
-	//err = http.ListenAndServe(":3000", nil)
+	err = http.ListenAndServeTLS(":443", "cert/certificate.crt", "cert/private.key", nil)
 	logrus.Fatal(err)
 }

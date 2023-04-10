@@ -158,7 +158,7 @@ form.addEventListener("submit", (event) => {
             }
         }
     }
-    xhr.open('POST', 'https://13.38.96.67:3000/submit', true)
+    xhr.open('POST', 'https://13.38.96.67/submit', true)
     xhr.setRequestHeader('Content-type', 'application/json')
     xhr.send(postData)
 });
