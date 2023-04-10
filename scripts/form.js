@@ -2,6 +2,7 @@ let map;
 let circle;
 
 const cityCenter = { lat: 48.8566, lng: 2.3522 };
+const cityRadius = 2000
 
 async function initMap() {
     const { Map, Circle } = await google.maps.importLibrary("maps");
@@ -19,7 +20,7 @@ async function initMap() {
         fillOpacity: 0.35,
         map,
         center: cityCenter,
-        radius: 2000,
+        radius: cityRadius,
         editable: true,
         draggable: true
     });  
@@ -56,20 +57,7 @@ function updateTimeTable(i, j) {
 
     if (value) {
         currentPivot = null
-        for (let k = j; k < daySize; k++) {
-            if (isChosenTimeTable(i, k)) {
-                setTimeTable(i, k, false)
-            } else {
-                break
-            }
-        }
-        for (let k = j - 1; k >= 0; k--) {
-            if (isChosenTimeTable(i, k)) {
-                setTimeTable(i, k, false)
-            } else {
-                break
-            }
-        }
+        setTimeTable(i, j, false)
     } else {
         if (currentPivot && currentPivot[0] == i) {
             min = Math.min(currentPivot[1], j)
@@ -145,16 +133,20 @@ form.addEventListener("submit", (event) => {
         }
     }
 
+    const mapInfo = {'lat': circle.center.lat(), 'lng': circle.center.lng(), 'radius': circle.radius}
+
     var postData = JSON.stringify({
-        'name' : document.getElementById("name").textContent,
-        'email': document.getElementById("email").textContent,
-        'contact-info': document.getElementById("contact-info").textContent,
-        'bio': document.getElementById("bio").textContent,
-        'searching-for': document.getElementById("searching-for").textContent,
-        'map': {'center': circle.center, 'radius': circle.radius},
+        'name' : document.getElementById("name").value,
+        'email': document.getElementById("email").value,
+        'contact-info': document.getElementById("contact-info").value,
+        'bio': document.getElementById("bio").value,
+        'searching-for': document.getElementById("searching-for").value,
+        'map': mapInfo,
         'time': timeTableCondensed,
         'lang': checkedLanguages
     });
+
+    console.log(postData)
 
     var xhr = new XMLHttpRequest()
     xhr.onreadystatechange = () => { 
@@ -166,7 +158,7 @@ form.addEventListener("submit", (event) => {
             }
         }
     }
-    xhr.open('POST', 'http://127.0.0.1:3000', true)
+    xhr.open('POST', 'http://localhost:3000/submit', true)
     xhr.setRequestHeader('Content-type', 'application/json')
     xhr.send(postData)
 });
