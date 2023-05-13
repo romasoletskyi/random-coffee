@@ -1,8 +1,29 @@
 let map;
 let circle;
 
-const cityCenter = { lat: 48.8566, lng: 2.3522 };
+var cityCenter = { lat: 48.8566, lng: 2.3522 };
 const cityRadius = 2000
+
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(setCityCenter, errorCityCenter, {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+        })
+    } else {
+        initMap()
+    }
+}
+
+function setCityCenter(position) {
+    cityCenter = {lat: position.coords.latitude, lng: position.coords.longitude}
+    initMap()
+}
+
+function errorCityCenter(error) {
+    initMap()
+}
 
 async function initMap() {
     const { Map, Circle } = await google.maps.importLibrary("maps");
@@ -164,5 +185,5 @@ form.addEventListener("submit", (event) => {
 });
 
 
-initMap();
 initTimeTable();
+getLocation();
