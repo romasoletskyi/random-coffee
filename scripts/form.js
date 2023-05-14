@@ -114,7 +114,7 @@ function initTimeTable() {
     } 
 }
 
-const languages = ["french", "english"]
+const languages = ["english", "french", "german", "italian", "russian", "spanish"]
 
 const form = document.querySelector("form");
 form.addEventListener("submit", (event) => {
@@ -166,8 +166,6 @@ form.addEventListener("submit", (event) => {
         'time': timeTableCondensed,
         'lang': checkedLanguages
     });
-
-    console.log(postData)
 
     var xhr = new XMLHttpRequest()
     xhr.onreadystatechange = () => { 
