@@ -8,7 +8,6 @@ import (
 	"os"
 	"time"
 
-	_ "github.com/jackc/pgx/v4/stdlib"
 	"github.com/romasoletskyi/random-coffee/internal/data"
 	"github.com/romasoletskyi/random-coffee/internal/server"
 	"github.com/romasoletskyi/random-coffee/internal/user"
@@ -28,10 +27,11 @@ func main() {
 	logrus.SetOutput(file)
 	logrus.SetLevel(logrus.TraceLevel)
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 	defer cancel()
 
 	db, err := data.CreateDatabase(ctx)
+	defer func() { _ = db.Close() }()
 	if err != nil {
 		logrus.Fatal(err)
 	}

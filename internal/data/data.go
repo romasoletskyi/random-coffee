@@ -5,6 +5,8 @@ import (
 	"database/sql"
 	"encoding/json"
 	"strings"
+
+	_ "github.com/jackc/pgx/v4/stdlib"
 )
 
 type mapInfo struct {
@@ -47,10 +49,10 @@ func CreateDatabase(ctx context.Context) (Database, error) {
 		return Database{}, err
 	}
 
-	_, err = db.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS forms(id serial primary key, name text, email text,
+	_, err = db.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS forms(id serial primary key, ts timestamptz, name text, email text,
 																   contact text, bio text, target text,
 																   latitude float, longitude float, radius float,
-																   time text, language text)`)
+																   time text, language text);`)
 	if err != nil {
 		return Database{db}, err
 	}
@@ -69,11 +71,13 @@ func (d *Database) AddUserForm(ctx context.Context, form UserForm) error {
 		return err
 	}
 
-	_, err = d.db.ExecContext(ctx, `INSERT INTO forms (name, email, contact, bio, target, 
-											  			latitude, longitude, radius, time, language) 
-						   			 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);`,
+	_, err = d.db.ExecContext(ctx, `INSERT INTO forms (ts, name, email, contact, bio, target, latitude, longitude, radius, time, language) VALUES (current_timestamp, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10);`,
 		form.Name, form.Email, form.Contact, form.Bio, form.Target,
 		form.Map.Lat, form.Map.Lng, form.Map.Radius, time, language)
 
 	return err
+}
+
+func (d *Database) Close() error {
+	return d.db.Close()
 }

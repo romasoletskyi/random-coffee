@@ -49,11 +49,21 @@ func Submit(db data.Database, w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
+	go func() {
+		ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+		defer cancel()
 
-	go db.AddUserForm(ctx, form)
-	go user.SendConfirmationMail(form)
+		err := db.AddUserForm(ctx, form)
+		if err != nil {
+			logrus.Error(err)
+		}
+	}()
+	go func() {
+		err := user.SendConfirmationMail(form)
+		if err != nil {
+			logrus.Error(err)
+		}
+	}()
 
 	setCORS(w, req)
 	w.WriteHeader(http.StatusOK)

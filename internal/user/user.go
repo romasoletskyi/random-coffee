@@ -6,7 +6,6 @@ import (
 	"strings"
 
 	"github.com/romasoletskyi/random-coffee/internal/data"
-	"github.com/sirupsen/logrus"
 	"gopkg.in/gomail.v2"
 )
 
@@ -15,7 +14,7 @@ var confirmationEmail string
 
 var Username, Password string
 
-func sendMail(to, subject, text string) {
+func sendMail(to, subject, text string) error {
 	m := gomail.NewMessage()
 	m.SetHeader("From", "random.coffee.manager@gmail.com")
 	m.SetHeader("To", to)
@@ -23,25 +22,20 @@ func sendMail(to, subject, text string) {
 	m.SetBody("text/html", text)
 
 	d := gomail.NewDialer("email-smtp.eu-west-3.amazonaws.com", 587, Username, Password)
-	if err := d.DialAndSend(m); err != nil {
-		logrus.Error(err)
-	}
+	return d.DialAndSend(m)
 }
 
-func SendConfirmationMail(form data.UserForm) {
+func SendConfirmationMail(form data.UserForm) error {
 	t, err := template.New("make-letter").Parse(confirmationEmail)
 	if err != nil {
-		logrus.Error(err)
-		return
+		return err
 	}
 
 	var builder strings.Builder
 	err = t.Execute(&builder, form)
 	if err != nil {
-		logrus.Error(err)
-		return
+		return err
 	}
 
-	logrus.Info(builder.String())
-	sendMail(form.Email, "Submit confirmation", builder.String())
+	return sendMail(form.Email, "Submit confirmation", builder.String())
 }
