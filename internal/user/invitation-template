@@ -86,10 +86,14 @@
                             <strong>Bio:</strong> {{.Right.Bio}}
                         </p>
                         <p style="margin-top: 6px; margin-bottom: 5px; font-size: 16px; line-height: 24px; color: #51545E">
-                            We're excited to see you connect and we encourage you to seize this opportunity to make new connections. 
-                            If you have any suggestions or feedback for us, please click the button below. 
-                            Your input is highly valuable to us as we strive to improve the Random Coffee experience. 
-                            And don't forget, you can always participate again next week!
+                          We're excited to see you connect and we encourage you to seize this opportunity to make new connections. 
+                          Don't forget, you can always participate again next week! 
+                          Plus, feel free to bring your friends from your existing social circle along. 
+                          They can also join the Random Coffee community and discover new connections just like you!
+                        </p>
+                        <p style="margin-top: 6px; margin-bottom: 5px; font-size: 16px; line-height: 24px; color: #51545E">
+                          If you have any suggestions or feedback for us, please click the button below. 
+                          Your input is highly valuable to us as we strive to improve the Random Coffee experience.
                         </p>
                         <table align="center" style="margin: 30px auto; width: 100%; text-align: center" cellpadding="0" cellspacing="0" role="presentation">
                           <tr>

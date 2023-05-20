@@ -3,10 +3,12 @@ form.addEventListener("submit", (event) => {
     event.preventDefault()
 
     var postData = JSON.stringify({
-        "meet" : document.getElementById("meet").value,
+        "meet" : document.getElementById("meet").checked,
         "satisfaction": document.getElementById("satisfaction").value,
         "add": document.getElementById("add").value
     });
+
+    console.log(postData)
 
     var xhr = new XMLHttpRequest()
     xhr.onreadystatechange = () => { 
