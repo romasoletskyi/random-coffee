@@ -90,8 +90,9 @@ type PairInfo struct {
 }
 
 type PairForm struct {
-	Left  PairInfo
-	Right PairInfo
+	ActionLink string
+	Left       PairInfo
+	Right      PairInfo
 }
 
 func ReversePairForm(form PairForm) PairForm {
@@ -133,6 +134,8 @@ func (d *PairDatabase) GetPairs(ctx context.Context) ([]PairForm, error) {
 
 	for rows.Next() {
 		var form PairForm
+		form.ActionLink = "https://romasoletskyi.github.io/random-coffee/pages/feedback.html"
+
 		if err := rows.Scan(&form.Left.Name, &form.Left.Email, &form.Left.Contact, &form.Left.Bio,
 			&form.Right.Name, &form.Right.Email, &form.Right.Contact, &form.Right.Bio); err != nil {
 			return forms, err

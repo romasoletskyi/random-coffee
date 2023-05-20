@@ -171,7 +171,7 @@ form.addEventListener("submit", (event) => {
     xhr.onreadystatechange = () => { 
         if (xhr.readyState == 4) {
             if (xhr.status == 200) {
-                location.href = "submit.html"
+                location.href = "form-submit.html"
             } else {
                 location.href = "error.html"
             }

@@ -28,32 +28,33 @@ func SendMail(to, subject, text string) error {
 	return d.DialAndSend(m)
 }
 
-func SendConfirmationMail(form data.UserForm) error {
-	t, err := template.New("make-letter").Parse(confirmationEmail)
+func PrepareMail(temp string, form any) (string, error) {
+	t, err := template.New("make-letter").Parse(temp)
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	var builder strings.Builder
 	err = t.Execute(&builder, form)
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	return SendMail(form.Email, "Submit confirmation", builder.String())
+	return builder.String(), nil
+}
+
+func SendConfirmationMail(form data.UserForm) error {
+	mail, err := PrepareMail(confirmationEmail, form)
+	if err != nil {
+		return err
+	}
+	return SendMail(form.Email, "Submit confirmation", mail)
 }
 
 func SendInvitationMail(form data.PairForm) error {
-	t, err := template.New("make-letter").Parse(invitationEmail)
+	mail, err := PrepareMail(invitationEmail, form)
 	if err != nil {
 		return err
 	}
-
-	var builder strings.Builder
-	err = t.Execute(&builder, form)
-	if err != nil {
-		return err
-	}
-
-	return SendMail(form.Left.Email, "Pair invitation", builder.String())
+	return SendMail(form.Left.Email, "Pair invitation", mail)
 }

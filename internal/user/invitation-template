@@ -1,8 +1,126 @@
-Dear {{.Left.Name}}<br><br>
-We have found a pair for you!<br>
-<b>Name:</b>{{.Right.Name}}<br>
-<b>Email:</b>{{.Right.Email}}<br>
-{{if .Right.Contact}}<b>Contact:</b>{{.Right.Contact}}<br>{{end}}
-<b>Bio:</b>{{.Right.Bio}}<br>
-Sincerely yours,<br>
-Random Coffee Team
+<!DOCTYPE html>
+<html lang="en" xmlns:v="urn:schemas-microsoft-com:vml" style="color-scheme: light dark;">
+<head>
+  <meta charset="utf-8">
+  <meta name="x-apple-disable-message-reformatting">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="format-detection" content="telephone=no, date=no, address=no, email=no, url=no">
+  <meta name="color-scheme" content="light dark">
+  <meta name="supported-color-schemes" content="light dark">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;700&display=swap" rel="stylesheet" media="screen">
+  <style>
+    @media (max-width: 600px) {
+      .button {
+        width: 100% !important;
+        text-align: center !important;
+      }
+    }
+    @media (prefers-color-scheme: dark) {
+      body,
+      .email-body,
+      .email-body_inner,
+      .email-content,
+      .email-wrapper,
+      .email-masthead,
+      .email-footer {
+        background-color: #333333 !important;
+        color: #fff !important;
+      }
+      p,
+      ul,
+      ol,
+      blockquote,
+      h1,
+      h2,
+      h3 {
+        color: #fff !important;
+      }
+      .email-masthead_name {
+        text-shadow: none !important;
+      }
+    }
+    :root {
+      color-scheme: light dark;
+    }
+    @media (max-width: 600px) {
+      .sm-w-full {
+        width: 100% !important;
+      }
+    }
+  </style>
+</head>
+<body style="word-break: break-word; -webkit-font-smoothing: antialiased; margin: 0; width: 100%; padding: 0">
+  <div role="article" aria-roledescription="email" aria-label lang="en">
+    <table class="email-wrapper" style="width: 100%; font-family: 'Nunito Sans', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif" cellpadding="0" cellspacing="0" role="presentation">
+      <tr>
+        <td align="center">
+          <table class="email-content" style="width: 100%" cellpadding="0" cellspacing="0" role="presentation">
+            <tr>
+              <td align="center" class="email-masthead" style="padding-top: 25px; padding-bottom: 25px; text-align: center; font-size: 16px">
+                <a class="email-masthead_name" style="text-decoration: none; text-shadow: 0 1px 0 #FFF; font-size: 16px; font-weight: 700; color: #A8AAAF">
+                  [Random Coffee]
+                </a>
+              </td>
+            </tr>
+            <tr>
+              <td class="email-body" style="width: 100%; background-color: #fff">
+                <table align="center" class="email-body_inner sm-w-full" style="margin-left: auto; margin-right: auto; width: 570px; background-color: #fff" cellpadding="0" cellspacing="0" role="presentation">
+                  <tr>
+                    <td style="padding: 45px">
+                      <div style="font-size: 16px">
+                        <h1 style="margin-top: 0; text-align: left; font-size: 24px; font-weight: 700; color: #333333">
+                          Hi, {{.Left.Name}}!
+                        </h1>
+                        <p style="margin-top: 6px; margin-bottom: 5px; font-size: 16px; line-height: 24px; color: #51545E">
+                            Great news! We have found a perfect match for you and we hope you'll have a wonderful time getting to know each other.
+                        </p>
+                        <p style="margin-top: 6px; margin-bottom: 5px; font-size: 16px; line-height: 24px; color: #51545E">
+                            Here are the details of your match:
+                        </p>
+                        <p style="margin-top: 6px; margin-bottom: 5px; font-size: 16px; line-height: 24px; color: #51545E">
+                            <strong>Name:</strong> {{.Right.Name}}<br>
+                            <strong>Email:</strong> {{.Right.Email}}<br>
+                            {{if .Right.Contact}}<strong>Contact:</strong> {{.Right.Contact}}<br>{{end}}
+                            <strong>Bio:</strong> {{.Right.Bio}}
+                        </p>
+                        <p style="margin-top: 6px; margin-bottom: 5px; font-size: 16px; line-height: 24px; color: #51545E">
+                            We're excited to see you connect and we encourage you to seize this opportunity to make new connections. 
+                            If you have any suggestions or feedback for us, please click the button below. 
+                            Your input is highly valuable to us as we strive to improve the Random Coffee experience. 
+                            And don't forget, you can always participate again next week!
+                        </p>
+                        <table align="center" style="margin: 30px auto; width: 100%; text-align: center" cellpadding="0" cellspacing="0" role="presentation">
+                          <tr>
+                            <td align="center">
+                              <table style="width: 100%" cellpadding="0" cellspacing="0" role="presentation">
+                                <tr>
+                                  <td align="center" style="font-size: 16px">
+                                    <a href="{{.ActionLink}}" style="display: inline-block; color: #fff; text-decoration-line: none; background-color: #3869D4; border-color: #3869d4; border-style: solid; border-width: 10px 18px; border-radius: 3px; box-shadow: 0 2px 3px rgba(0, 0, 0, 0.16)">Feedback</a>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                          </tr>
+                        </table>
+                        <p style="margin-top: 6px; margin-bottom: 5px; font-size: 16px; line-height: 24px; color: #51545E">
+                            Enjoy your meeting and have a fantastic time!
+                        </p>
+                        <p style="margin-top: 6px; margin-bottom: 5px; font-size: 16px; line-height: 24px; color: #51545E">
+                            Sincerely yours,<br>
+                            Random Coffee Team
+                        </p>
+                      </div>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </div>
+</body>
+</html>
