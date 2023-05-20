@@ -39,25 +39,36 @@ type UserForm struct {
 	Lang    languageTable `json:"lang"`
 }
 
-func CreateRawDatabase(ctx context.Context, query string) (*sql.DB, error) {
+func GetRawDatabase(ctx context.Context) (*sql.DB, error) {
+	db, err := sql.Open("pgx", "user=postgres password=admin host=localhost port=5432 database=postgres sslmode=disable")
+	return db, err
+}
+
+func CreateRawDatabase(ctx context.Context) (*sql.DB, error) {
 	db, err := sql.Open("pgx", "user=postgres password=admin host=localhost port=5432 database=postgres sslmode=disable")
 	if err != nil {
 		return nil, err
 	}
 
-	_, err = db.ExecContext(ctx, query)
+	_, err = db.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS forms(id serial primary key, ts timestamptz, name text, email text,
+									contact text, bio text, target text,
+									latitude float, longitude float, radius float,
+									time text, language text);`)
+	if err != nil {
+		return db, err
+	}
+
+	_, err = db.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS pairs(id1 serial, id2 serial);`)
+	if err != nil {
+		return db, err
+	}
+
+	_, err = db.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS feedbacks(id serial primary key, meet bool, satisfaction text, add text);`)
 	return db, err
 }
 
 type FormDatabase struct {
 	db *sql.DB
-}
-
-func CreateRawFormDatabase(ctx context.Context) (*sql.DB, error) {
-	return CreateRawDatabase(ctx, `CREATE TABLE IF NOT EXISTS forms(id serial primary key, ts timestamptz, name text, email text,
-																   contact text, bio text, target text,
-																   latitude float, longitude float, radius float,
-																   time text, language text);`)
 }
 
 func CreateFormDatabase(db *sql.DB) FormDatabase {
@@ -103,10 +114,6 @@ type PairDatabase struct {
 	db *sql.DB
 }
 
-func CreateRawPairDatabase(ctx context.Context) (*sql.DB, error) {
-	return CreateRawDatabase(ctx, `CREATE TABLE IF NOT EXISTS pairs(id1 serial, id2 serial);`)
-}
-
 func CreatePairDatabase(db *sql.DB) PairDatabase {
 	return PairDatabase{db}
 }
@@ -144,4 +151,24 @@ func (d *PairDatabase) GetPairs(ctx context.Context) ([]PairForm, error) {
 	}
 
 	return forms, rows.Err()
+}
+
+type FeedbackForm struct {
+	Meet         bool   `json:"meet"`
+	Satisfaction string `json:"satisfaction"`
+	Add          string `json:"add"`
+}
+
+type FeedbackDatabase struct {
+	db *sql.DB
+}
+
+func CreateFeedbackDatabase(db *sql.DB) FeedbackDatabase {
+	return FeedbackDatabase{db}
+}
+
+func (d *FeedbackDatabase) AddFeedbackForm(ctx context.Context, form FeedbackForm) error {
+	_, err := d.db.ExecContext(ctx, `INSERT INTO feedbacks (meet, satisfaction, add) VALUES ($1, $2, $3);`,
+		form.Meet, form.Satisfaction, form.Add)
+	return err
 }

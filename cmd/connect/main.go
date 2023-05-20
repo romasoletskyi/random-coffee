@@ -15,7 +15,7 @@ import (
 )
 
 func main() {
-	file, db := app.Initialize("connect-log", data.CreateRawPairDatabase)
+	file, db := app.Initialize("connect-log", data.GetRawDatabase)
 	defer file.Close()
 	defer func() { _ = db.Close() }()
 
