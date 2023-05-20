@@ -1,0 +1,8 @@
+Dear {{.Left.Name}}<br><br>
+We have found a pair for you!<br>
+<b>Name:</b>{{.Right.Name}}<br>
+<b>Email:</b>{{.Right.Email}}<br>
+{{if .Right.Contact}}<b>Contact:</b>{{.Right.Contact}}<br>{{end}}
+<b>Bio:</b>{{.Right.Bio}}<br>
+Sincerely yours,<br>
+Random Coffee Team

@@ -12,16 +12,19 @@ import (
 //go:embed confirmation-template
 var confirmationEmail string
 
+//go:embed invitation-template
+var invitationEmail string
+
 var Username, Password string
 
-func sendMail(to, subject, text string) error {
+func SendMail(to, subject, text string) error {
 	m := gomail.NewMessage()
 	m.SetHeader("From", "random.coffee.manager@gmail.com")
 	m.SetHeader("To", to)
 	m.SetHeader("Subject", subject)
 	m.SetBody("text/html", text)
 
-	d := gomail.NewDialer("email-smtp.eu-west-3.amazonaws.com", 587, Username, Password)
+	d := gomail.NewDialer("smtp-relay.sendinblue.com", 587, Username, Password)
 	return d.DialAndSend(m)
 }
 
@@ -37,5 +40,20 @@ func SendConfirmationMail(form data.UserForm) error {
 		return err
 	}
 
-	return sendMail(form.Email, "Submit confirmation", builder.String())
+	return SendMail(form.Email, "Submit confirmation", builder.String())
+}
+
+func SendInvitationMail(form data.PairForm) error {
+	t, err := template.New("make-letter").Parse(invitationEmail)
+	if err != nil {
+		return err
+	}
+
+	var builder strings.Builder
+	err = t.Execute(&builder, form)
+	if err != nil {
+		return err
+	}
+
+	return SendMail(form.Left.Email, "Pair invitation", builder.String())
 }

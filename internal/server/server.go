@@ -20,7 +20,7 @@ func setCORS(w http.ResponseWriter, req *http.Request) {
 	w.Header().Set("Access-Control-Max-Age", "300")
 }
 
-func Submit(db data.Database, w http.ResponseWriter, req *http.Request) {
+func Submit(db data.FormDatabase, w http.ResponseWriter, req *http.Request) {
 	if req.Method == http.MethodOptions {
 		setCORS(w, req)
 		w.WriteHeader(http.StatusOK)

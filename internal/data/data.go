@@ -39,28 +39,32 @@ type UserForm struct {
 	Lang    languageTable `json:"lang"`
 }
 
-type Database struct {
+func CreateRawDatabase(ctx context.Context, query string) (*sql.DB, error) {
+	db, err := sql.Open("pgx", "user=postgres password=admin host=localhost port=5432 database=postgres sslmode=disable")
+	if err != nil {
+		return nil, err
+	}
+
+	_, err = db.ExecContext(ctx, query)
+	return db, err
+}
+
+type FormDatabase struct {
 	db *sql.DB
 }
 
-func CreateDatabase(ctx context.Context) (Database, error) {
-	db, err := sql.Open("pgx", "user=postgres password=admin host=localhost port=5432 database=postgres sslmode=disable")
-	if err != nil {
-		return Database{}, err
-	}
-
-	_, err = db.ExecContext(ctx, `CREATE TABLE IF NOT EXISTS forms(id serial primary key, ts timestamptz, name text, email text,
+func CreateRawFormDatabase(ctx context.Context) (*sql.DB, error) {
+	return CreateRawDatabase(ctx, `CREATE TABLE IF NOT EXISTS forms(id serial primary key, ts timestamptz, name text, email text,
 																   contact text, bio text, target text,
 																   latitude float, longitude float, radius float,
 																   time text, language text);`)
-	if err != nil {
-		return Database{db}, err
-	}
-
-	return Database{db}, nil
 }
 
-func (d *Database) AddUserForm(ctx context.Context, form UserForm) error {
+func CreateFormDatabase(db *sql.DB) FormDatabase {
+	return FormDatabase{db}
+}
+
+func (d *FormDatabase) AddUserForm(ctx context.Context, form UserForm) error {
 	time, err := Serialize(form.Time)
 	if err != nil {
 		return err
@@ -78,6 +82,63 @@ func (d *Database) AddUserForm(ctx context.Context, form UserForm) error {
 	return err
 }
 
-func (d *Database) Close() error {
-	return d.db.Close()
+type PairInfo struct {
+	Name    string
+	Email   string
+	Contact string
+	Bio     string
+}
+
+type PairForm struct {
+	Left  PairInfo
+	Right PairInfo
+}
+
+func ReversePairForm(form PairForm) PairForm {
+	return PairForm{Left: form.Right, Right: form.Left}
+}
+
+type PairDatabase struct {
+	db *sql.DB
+}
+
+func CreateRawPairDatabase(ctx context.Context) (*sql.DB, error) {
+	return CreateRawDatabase(ctx, `CREATE TABLE IF NOT EXISTS pairs(id1 serial, id2 serial);`)
+}
+
+func CreatePairDatabase(db *sql.DB) PairDatabase {
+	return PairDatabase{db}
+}
+
+func (d *PairDatabase) GetPairs(ctx context.Context) ([]PairForm, error) {
+	rows, err := d.db.QueryContext(ctx,
+		`SELECT
+			f1.name AS name1,
+			f1.email AS email1,
+			f1.contact AS contact1,
+			f1.bio AS bio1,
+			f2.name AS name2,
+			f2.email AS email2,
+			f2.contact AS contact2,
+			f2.bio AS bio2
+		FROM
+			forms f1
+			JOIN pairs p ON f1.id = p.id1
+			JOIN forms f2 ON f2.id = p.id2;`)
+
+	forms := make([]PairForm, 0)
+	if err != nil {
+		return forms, err
+	}
+
+	for rows.Next() {
+		var form PairForm
+		if err := rows.Scan(&form.Left.Name, &form.Left.Email, &form.Left.Contact, &form.Left.Bio,
+			&form.Right.Name, &form.Right.Email, &form.Right.Contact, &form.Right.Bio); err != nil {
+			return forms, err
+		}
+		forms = append(forms, form)
+	}
+
+	return forms, rows.Err()
 }
